@@ -1,6 +1,13 @@
 module Api
   module V1
     class UsersController < ApplicationController
+
+      def index
+        users = User.all
+        render json: users
+
+      end
+
       def create
         user = User.create(user_params)
 
@@ -11,9 +18,12 @@ module Api
       end
 
       def profile
-        user = User.find(user_id)
 
-        render json: user
+        token = request.headers['Authorization']
+        decoded_token = JWT.decode token, 'baboon', true, { algorithm: 'HS256'}
+        user_id = decoded_token[0]['user_id']
+
+        render json: current_user
       end
 
       private
