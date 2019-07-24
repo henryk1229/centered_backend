@@ -1,7 +1,3 @@
-module Api
-  module V1
-    class ThemesController < ApplicationController
+class Api::V1::ThemesController < ApplicationController
 
-    end
-  end
 end

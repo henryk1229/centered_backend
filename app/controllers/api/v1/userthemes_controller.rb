@@ -1,7 +1,3 @@
-module Api
-  module V1
-    class UserthemesController < ApplicationController
-      
-    end
-  end
+class Api::V1::UserthemesController < ApplicationController
+
 end
