@@ -23,14 +23,13 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def profile
-
     render json: session_user
   end
 
   private
 
   def user_params
-    params.permit(:username, :email, :password)
+    params.permit(:username, :email, :password, :koan_number)
   end
 
 end
