@@ -10,7 +10,6 @@ class Api::V1::UsersController < ApplicationController
     user = User.find(user_params)
 
     render json: user
-
   end
 
   def create
@@ -20,19 +19,17 @@ class Api::V1::UsersController < ApplicationController
 
     if is_valid
       render json: { token: encode_token(user) }
+    end
   end
 
   def profile
-
-    token = request.headers['Authorization']
-    decoded_token = JWT.decode token, 'baboon', true, { algorithm: 'HS256'}
-    user_id = decoded_token[0]['user_id']
-
-    render json: current_user
+    render json: session_user
   end
 
   private
-    params.permit(:username, :email, :password)
+
+  def user_params
+    params.permit(:username, :email, :password, :koan_number)
   end
 
 end
