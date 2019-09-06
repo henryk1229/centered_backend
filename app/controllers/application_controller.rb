@@ -1,21 +1,36 @@
 class ApplicationController < ActionController::API
-  def user_payload(user)
-    { user_id: user.id }
+  before_action :authorized
+
+  def encode_token(payload)
+    JWT.encode(payload, 'b@boon')
   end
 
-  def encode_token(user)
-    JWT.encode(user_payload(user), 'baboon', 'HS256')
-  end
-
-  def token
-    token = request.headers["Authorization"]
+  def auth_header
+    request.headers["Authorization"]
   end
 
   def decoded_token
-    JWT.decode(token, 'baboon', true, { algorithm: 'HS256'})
+    if auth_header
+      begin
+        JWT.decode(auth_header, 'b@boon')[0]["user_id"]
+      rescue JWT::DecodeError
+        nil
+      end
+    end
   end
 
   def session_user
-    User.find(decoded_token[0]["user_id"])
+
+    User.find_by(id: decoded_token)
+
   end
+
+  def logged_in?
+    !!session_user
+  end
+
+  def authorized
+    render json: { message: 'Please log in' }, status: :unauthorized unless logged_in?
+  end
+
 end
